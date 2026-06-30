@@ -12,6 +12,8 @@ import com.ifpr.wearostemplate.R
 import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.Date
+import android.content.Intent
+import android.widget.Button
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -31,6 +33,15 @@ class MainActivity : ComponentActivity() {
 
         txtData.text = dataFormat.format(Date()).uppercase()
         txtHora.text = horaFormat.format(Date())
+        val btnEstatistica = findViewById<Button>(R.id.btnEstatistica)
+
+        btnEstatistica.setOnClickListener {
+
+            val intent = Intent(this, EstatisticaActivity::class.java)
+
+            startActivity(intent)
+
+        }
     }
 }
 
