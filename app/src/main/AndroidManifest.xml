@@ -37,8 +37,10 @@
         <activity
             android:name=".presentation.EstatisticaActivity"
             android:exported="false"
+            android:taskAffinity=""
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
 
     </application>
 
