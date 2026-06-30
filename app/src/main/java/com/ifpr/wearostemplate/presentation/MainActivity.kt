@@ -9,6 +9,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ifpr.wearostemplate.R
+import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +23,14 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
 
         setContentView(R.layout.activity_main)
+        val txtData = findViewById<TextView>(R.id.txtData)
+        val txtHora = findViewById<TextView>(R.id.txtHora)
+
+        val dataFormat = SimpleDateFormat("MMM dd", Locale("pt", "BR"))
+        val horaFormat = SimpleDateFormat("HH:mm", Locale("pt", "BR"))
+
+        txtData.text = dataFormat.format(Date()).uppercase()
+        txtHora.text = horaFormat.format(Date())
     }
 }
 
