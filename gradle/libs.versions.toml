@@ -1,6 +1,9 @@
 [versions]
 agp = "8.10.0"
+firebaseBom = "34.16.0"
 kotlin = "2.0.21"
+playServicesBase = "18.10.0"
+playServicesMaps = "20.0.0"
 playServicesWearable = "20.0.1"
 composeBom = "2024.09.00"
 composeMaterial = "1.2.1"
@@ -8,12 +11,17 @@ composeFoundation = "1.2.1"
 wearToolingPreview = "1.0.0"
 activityCompose = "1.12.2"
 coreSplashscreen = "1.0.1"
-appcompat = "1.6.1"
-material = "1.10.0"
-activityKtx = "1.8.0"
+appcompat = "1.7.1"
+material = "1.14.0"
+activity = "1.13.0"
 constraintlayout = "2.2.1"
 
 [libraries]
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-database = { module = "com.google.firebase:firebase-database" }
+play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
+play-services-basement = { module = "com.google.android.gms:play-services-basement", version.ref = "playServicesBase" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
@@ -29,7 +37,7 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [plugins]
