@@ -5,11 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-<<<<<<< HEAD
-import android.view.View
-=======
 import android.os.SystemClock
->>>>>>> upstream/calcula-dados-corrida
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -26,20 +22,11 @@ import com.google.android.gms.location.Priority
 import com.google.firebase.database.FirebaseDatabase
 import com.ifpr.wearostemplate.R
 import com.ifpr.wearostemplate.presentation.baseclasses.Corrida
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
-import android.widget.TextView
-
-
-
-
-
 
 class MainActivity : ComponentActivity() {
-<<<<<<< HEAD
-    private var distanciaAtualKm = 0.0
-    private var tempoAtualSegundos = 0L
-    private var inicioCorrida = 0L
-=======
 
     // =========================================================
     // LOCALIZAÇÃO
@@ -62,13 +49,16 @@ class MainActivity : ComponentActivity() {
     // COMPONENTES DA INTERFACE
     // =========================================================
 
+    private lateinit var txtData: TextView
+    private lateinit var txtHora: TextView
+
     private lateinit var txtTempo: TextView
     private lateinit var txtDistancia: TextView
     private lateinit var txtRitmo: TextView
 
-    private lateinit var btnStart: Button
+    private lateinit var btnTreino: Button
     private lateinit var btnStop: Button
-    private lateinit var btnPerfil: Button
+    private lateinit var btnEstatistica: Button
 
     // =========================================================
     // DADOS DA CORRIDA
@@ -76,14 +66,14 @@ class MainActivity : ComponentActivity() {
 
     private var corridaEmAndamento = false
 
-    private var tempoInicio: Long = 0L
+    private var tempoInicio = 0L
 
     private var distanciaTotalMetros = 0.0
 
     private var ultimaLocalizacao: Location? = null
 
     // =========================================================
-    // PERMISSÃO
+    // PERMISSÃO DE LOCALIZAÇÃO
     // =========================================================
 
     private val solicitarPermissaoLocalizacao =
@@ -106,7 +96,7 @@ class MainActivity : ComponentActivity() {
         }
 
     // =========================================================
-    // TIMER
+    // CRONÔMETRO
     // =========================================================
 
     private val atualizadorTempo = object : Runnable {
@@ -133,7 +123,6 @@ class MainActivity : ComponentActivity() {
     // ON CREATE
     // =========================================================
 
->>>>>>> upstream/calcula-dados-corrida
     override fun onCreate(savedInstanceState: Bundle?) {
 
         installSplashScreen()
@@ -143,78 +132,38 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
 
         setContentView(R.layout.activity_main)
-        val txtData = findViewById<TextView>(R.id.txtData)
-        val txtHora = findViewById<TextView>(R.id.txtHora)
 
-<<<<<<< HEAD
-        val dataFormat = SimpleDateFormat("MMM dd", Locale("pt", "BR"))
-        val horaFormat = SimpleDateFormat("HH:mm", Locale("pt", "BR"))
-
-        txtData.text = dataFormat.format(Date()).uppercase()
-        txtHora.text = horaFormat.format(Date())
-
-        val btnEstatistica = findViewById<Button>(R.id.btnEstatistica)
-
-        btnEstatistica.setOnClickListener{
-            val intent = Intent(this, EstatisticaActivity::class.java)
-            startActivity(intent)
-        }
-
-        val btnTreino = findViewById<Button>(R.id.btnTreino)
-        val btnStop = findViewById<Button>(R.id.btnStop)
-
-        btnStop.visibility = View.GONE
-
-        btnTreino.setOnClickListener {
-            inicioCorrida = System.currentTimeMillis()
-
-            btnTreino.visibility = View.GONE
-            btnStop.visibility = View.VISIBLE
-
-            Toast.makeText(this, "Corrida iniciada", Toast.LENGTH_SHORT).show()
-        }
-
-        btnStop.setOnClickListener {
-            tempoAtualSegundos = (System.currentTimeMillis() - inicioCorrida) / 1000
-
-            salvarCorrida(distanciaAtualKm, tempoAtualSegundos)
-
-            btnStop.visibility = View.GONE
-            btnTreino.visibility = View.VISIBLE
-
-            Toast.makeText(this, "Corrida finalizada", Toast.LENGTH_SHORT).show()
-        }
-    }
-    private fun calcularRitmo(distanciaKm: Double, tempoSegundos:
-    Long): String {
-        if (distanciaKm <= 0.0) return "0:00"
-        val segundosPorKm = (tempoSegundos / distanciaKm).toInt()
-        val minutos = segundosPorKm / 60
-        val segundos = segundosPorKm % 60
-        return "$minutos:"+ segundos.toString().padStart(2, '0')
-    }
-    private fun salvarCorrida(distanciaKm: Double, tempoSegundos:
-    Long) {
-        val database = FirebaseDatabase.getInstance()
-        val referencia = database.getReference("corridas")
-        val id = referencia.push().key ?: return
-        val data = SimpleDateFormat("dd/MM/yyyy HH:mm",
-            Locale.getDefault()).format(Date())
-        val ritmo = calcularRitmo(distanciaKm, tempoSegundos)
-        val corrida = Corrida(distanciaKm, tempoSegundos, ritmo, data)
-        referencia.child(id).setValue(corrida)
-=======
         // -----------------------------------------------------
         // COMPONENTES
         // -----------------------------------------------------
+
+        txtData = findViewById(R.id.txtData)
+        txtHora = findViewById(R.id.txtHora)
 
         txtTempo = findViewById(R.id.txtTempo)
         txtDistancia = findViewById(R.id.txtDistancia)
         txtRitmo = findViewById(R.id.txtRitmo)
 
-        btnStart = findViewById(R.id.btnStart)
+        btnTreino = findViewById(R.id.btnTreino)
         btnStop = findViewById(R.id.btnStop)
-        btnPerfil = findViewById(R.id.btnPerfil)
+        btnEstatistica = findViewById(R.id.btnEstatistica)
+
+        // -----------------------------------------------------
+        // DATA E HORA
+        // -----------------------------------------------------
+
+        atualizarDataHora()
+
+        // -----------------------------------------------------
+        // ESTADO INICIAL
+        // -----------------------------------------------------
+
+        txtTempo.text = "00:00"
+        txtDistancia.text = "0.00 km"
+        txtRitmo.text = "-- min/km"
+
+        btnTreino.visibility = android.view.View.VISIBLE
+        btnStop.visibility = android.view.View.GONE
 
         // -----------------------------------------------------
         // LOCALIZAÇÃO
@@ -233,30 +182,71 @@ class MainActivity : ComponentActivity() {
     }
 
     // =========================================================
+    // DATA E HORA
+    // =========================================================
+
+    private fun atualizarDataHora() {
+
+        val agora = Date()
+
+        val dataFormat =
+            SimpleDateFormat(
+                "MMM dd",
+                Locale("pt", "BR")
+            )
+
+        val horaFormat =
+            SimpleDateFormat(
+                "HH:mm",
+                Locale("pt", "BR")
+            )
+
+        txtData.text =
+            dataFormat
+                .format(agora)
+                .uppercase()
+
+        txtHora.text =
+            horaFormat.format(agora)
+    }
+
+    // =========================================================
     // BOTÕES
     // =========================================================
 
     private fun configurarBotoes() {
 
-        btnPerfil.setOnClickListener {
+        // -----------------------------------------------------
+        // BOTÃO INICIAR
+        // -----------------------------------------------------
 
-            val intent =
-                Intent(
-                    this,
-                    PerfilActivity::class.java
-                )
-
-            startActivity(intent)
-        }
-
-        btnStart.setOnClickListener {
+        btnTreino.setOnClickListener {
 
             verificarPermissaoEIniciarCorrida()
         }
 
+        // -----------------------------------------------------
+        // BOTÃO STOP
+        // -----------------------------------------------------
+
         btnStop.setOnClickListener {
 
             encerrarCorrida()
+        }
+
+        // -----------------------------------------------------
+        // BOTÃO STATUS
+        // -----------------------------------------------------
+
+        btnEstatistica.setOnClickListener {
+
+            val intent =
+                Intent(
+                    this,
+                    EstatisticaActivity::class.java
+                )
+
+            startActivity(intent)
         }
     }
 
@@ -276,7 +266,6 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
         }
->>>>>>> upstream/calcula-dados-corrida
     }
 
     // =========================================================
@@ -302,6 +291,10 @@ class MainActivity : ComponentActivity() {
 
         corridaEmAndamento = true
 
+        // -----------------------------------------------------
+        // RESETAR DADOS
+        // -----------------------------------------------------
+
         distanciaTotalMetros = 0.0
 
         ultimaLocalizacao = null
@@ -310,7 +303,7 @@ class MainActivity : ComponentActivity() {
             SystemClock.elapsedRealtime()
 
         // -----------------------------------------------------
-        // REINICIAR A INTERFACE
+        // ATUALIZAR INTERFACE
         // -----------------------------------------------------
 
         txtTempo.text = "00:00"
@@ -319,8 +312,14 @@ class MainActivity : ComponentActivity() {
 
         txtRitmo.text = "-- min/km"
 
+        btnTreino.visibility =
+            android.view.View.GONE
+
+        btnStop.visibility =
+            android.view.View.VISIBLE
+
         // -----------------------------------------------------
-        // INICIAR TIMER
+        // INICIAR CRONÔMETRO
         // -----------------------------------------------------
 
         txtTempo.post(
@@ -341,7 +340,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // =========================================================
-    // CALLBACK DE LOCALIZAÇÃO
+    // CONFIGURAR CALLBACK DO GPS
     // =========================================================
 
     private fun configurarLocationCallback() {
@@ -408,7 +407,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // =========================================================
-    // PROCESSAR NOVA LOCALIZAÇÃO
+    // PROCESSAR LOCALIZAÇÃO
     // =========================================================
 
     private fun processarNovaLocalizacao(
@@ -426,8 +425,7 @@ class MainActivity : ComponentActivity() {
                 )
 
             /*
-             * Evita registrar pequenas oscilações
-             * causadas pela imprecisão do GPS.
+             * Ignora pequenas oscilações do GPS.
              */
             if (deslocamentoMetros >= 2.0) {
 
@@ -436,10 +434,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        /*
-         * A localização atual passa a ser
-         * a referência da próxima medição.
-         */
         ultimaLocalizacao =
             novaLocalizacao
 
@@ -447,7 +441,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // =========================================================
-    // ATUALIZAR DISTÂNCIA E RITMO
+    // ATUALIZAR DADOS
     // =========================================================
 
     private fun atualizarDadosNaTela() {
@@ -466,7 +460,7 @@ class MainActivity : ComponentActivity() {
             (
                     SystemClock.elapsedRealtime() -
                             tempoInicio
-                    ) / 1000
+                    ) / 1000L
 
         if (
             distanciaKm > 0.0 &&
@@ -495,13 +489,13 @@ class MainActivity : ComponentActivity() {
     ) {
 
         val segundosTotais =
-            tempoMilissegundos / 1000
+            tempoMilissegundos / 1000L
 
         val minutos =
-            segundosTotais / 60
+            segundosTotais / 60L
 
         val segundos =
-            segundosTotais % 60
+            segundosTotais % 60L
 
         txtTempo.text =
             String.format(
@@ -513,7 +507,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // =========================================================
-    // RITMO MÉDIO
+    // CALCULAR RITMO
     // =========================================================
 
     private fun calcularRitmoMedio(
@@ -528,8 +522,7 @@ class MainActivity : ComponentActivity() {
         val tempoMinutos =
             tempoSegundos / 60.0
 
-        return tempoMinutos /
-                distanciaKm
+        return tempoMinutos / distanciaKm
     }
 
     // =========================================================
@@ -575,8 +568,7 @@ class MainActivity : ComponentActivity() {
         val tempoHoras =
             tempoSegundos / 3600.0
 
-        return distanciaKm /
-                tempoHoras
+        return distanciaKm / tempoHoras
     }
 
     // =========================================================
@@ -629,7 +621,7 @@ class MainActivity : ComponentActivity() {
         )
 
         // -----------------------------------------------------
-        // CALCULAR RESULTADOS
+        // CALCULAR TEMPO
         // -----------------------------------------------------
 
         val tempoMilissegundos =
@@ -637,10 +629,24 @@ class MainActivity : ComponentActivity() {
                     tempoInicio
 
         val tempoSegundos =
-            tempoMilissegundos / 1000
+            tempoMilissegundos / 1000L
 
         val distanciaKm =
             distanciaTotalMetros / 1000.0
+
+        // -----------------------------------------------------
+        // ATUALIZAR BOTÕES
+        // -----------------------------------------------------
+
+        btnStop.visibility =
+            android.view.View.GONE
+
+        btnTreino.visibility =
+            android.view.View.VISIBLE
+
+        // -----------------------------------------------------
+        // VERIFICAR DISTÂNCIA
+        // -----------------------------------------------------
 
         if (distanciaKm <= 0.0) {
 
@@ -653,14 +659,24 @@ class MainActivity : ComponentActivity() {
             return
         }
 
+        // -----------------------------------------------------
+        // SALVAR
+        // -----------------------------------------------------
+
         salvarCorrida(
             distanciaKm,
             tempoSegundos
         )
+
+        Toast.makeText(
+            this,
+            "Corrida finalizada!",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     // =========================================================
-    // SALVAR CORRIDA
+    // SALVAR NO FIREBASE
     // =========================================================
 
     private fun salvarCorrida(
@@ -680,14 +696,8 @@ class MainActivity : ComponentActivity() {
                 tempoSegundos
             )
 
-        /*
-         * Peso temporário.
-         *
-         * Posteriormente poderá ser obtido
-         * do perfil do usuário.
-         */
-        val pesoKg =
-            70.0
+        // Peso provisório
+        val pesoKg = 70.0
 
         val calorias =
             calcularCalorias(
@@ -710,16 +720,31 @@ class MainActivity : ComponentActivity() {
                 .key
                 ?: return
 
+        val dataHora =
+            SimpleDateFormat(
+                "dd/MM/yyyy HH:mm",
+                Locale.getDefault()
+            ).format(Date())
+
+        // -----------------------------------------------------
+        // CRIAR OBJETO CORRIDA
+        // -----------------------------------------------------
+
         val corrida =
             Corrida(
-                id = id,
                 distanciaKm = distanciaKm,
+                dataHora = dataHora,
+                id = id,
                 tempoSegundos = tempoSegundos,
                 ritmoMedio = ritmoMedio,
                 velocidadeMedia = velocidadeMedia,
                 calorias = calorias,
                 data = System.currentTimeMillis()
             )
+
+        // -----------------------------------------------------
+        // SALVAR
+        // -----------------------------------------------------
 
         referencia
             .child(id)
@@ -742,8 +767,9 @@ class MainActivity : ComponentActivity() {
             }
     }
 
+
     // =========================================================
-    // PERMISSÃO
+    // VERIFICAR PERMISSÃO
     // =========================================================
 
     private fun temPermissaoLocalizacao(): Boolean {
@@ -751,22 +777,34 @@ class MainActivity : ComponentActivity() {
         return ContextCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+        ) == PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
     }
 
     // =========================================================
-    // DESTROY
+    // ON DESTROY
     // =========================================================
 
     override fun onDestroy() {
 
-        fusedLocationClient.removeLocationUpdates(
-            locationCallback
-        )
+        if (::fusedLocationClient.isInitialized &&
+            ::locationCallback.isInitialized
+        ) {
 
-        txtTempo.removeCallbacks(
-            atualizadorTempo
-        )
+            fusedLocationClient.removeLocationUpdates(
+                locationCallback
+            )
+        }
+
+        if (::txtTempo.isInitialized) {
+
+            txtTempo.removeCallbacks(
+                atualizadorTempo
+            )
+        }
 
         super.onDestroy()
     }
