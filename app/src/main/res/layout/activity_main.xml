@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +8,10 @@
     android:gravity="center_horizontal"
     android:padding="16dp">
 
-    <!-- Data e Hora -->
+    <!-- ===================================================== -->
+    <!-- DATA E HORA -->
+    <!-- ===================================================== -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +28,7 @@
             android:text="--"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtHora"
@@ -33,11 +37,15 @@
             android:text="--:--"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <!-- Card -->
+
+    <!-- ===================================================== -->
+    <!-- CARD -->
+    <!-- ===================================================== -->
+
     <LinearLayout
         android:id="@+id/cardTreino"
         android:layout_width="match_parent"
@@ -49,77 +57,93 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="16dp">
+
+        <!-- ================================================= -->
+        <!-- TÍTULO -->
+        <!-- ================================================= -->
 
         <TextView
             android:id="@+id/txtTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="PinkPace"
             android:textColor="#F48FB1"
-            android:textStyle="bold"
-            android:textSize="17sp" />
-    </LinearLayout>
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
-    <!-- Botões -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="6dp"
-        android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="85dp"
-            android:layout_height="42dp">
+        <!-- ================================================= -->
+        <!-- BOTÕES -->
+        <!-- ================================================= -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <!-- ============================================= -->
+            <!-- INICIAR / STOP -->
+            <!-- ============================================= -->
+
+            <FrameLayout
+                android:layout_width="85dp"
+                android:layout_height="42dp">
+
+                <Button
+                    android:id="@+id/btnTreino"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_background"
+                    android:text="Iniciar"
+                    android:textAllCaps="false"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnStop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_background_stop"
+                    android:text="Stop"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+
+            <!-- ============================================= -->
+            <!-- ESPAÇO -->
+            <!-- ============================================= -->
+
+            <Space
+                android:layout_width="6dp"
+                android:layout_height="wrap_content" />
+
+
+            <!-- ============================================= -->
+            <!-- STATUS -->
+            <!-- ============================================= -->
 
             <Button
-                android:id="@+id/btnTreino"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/btnEstatistica"
+                android:layout_width="85dp"
+                android:layout_height="42dp"
                 android:background="@drawable/button_background"
-                android:text="Iniciar"
+                android:text="Status"
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:textSize="12sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnStop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/button_background_stop"
-                android:text="Stop"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
-        </FrameLayout>
-
-        <Space
-            android:layout_width="6dp"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnEstatistica"
-            android:layout_width="85dp"
-            android:layout_height="42dp"
-            android:background="@drawable/button_background"
-            android:text="Status"
-            android:textAllCaps="false"
-            android:textColor="#000000"
-            android:textSize="12sp"
-            android:textStyle="bold"/>
+        </LinearLayout>
 
     </LinearLayout>
 
-
-    </LinearLayout>
 </LinearLayout>

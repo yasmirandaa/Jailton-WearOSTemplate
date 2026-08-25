@@ -140,10 +140,6 @@ class MainActivity : ComponentActivity() {
         txtData = findViewById(R.id.txtData)
         txtHora = findViewById(R.id.txtHora)
 
-        txtTempo = findViewById(R.id.txtTempo)
-        txtDistancia = findViewById(R.id.txtDistancia)
-        txtRitmo = findViewById(R.id.txtRitmo)
-
         btnTreino = findViewById(R.id.btnTreino)
         btnStop = findViewById(R.id.btnStop)
         btnEstatistica = findViewById(R.id.btnEstatistica)
@@ -696,7 +692,12 @@ class MainActivity : ComponentActivity() {
                 tempoSegundos
             )
 
-        // Peso provisório
+        /*
+         * Peso provisório.
+         *
+         * Depois podemos buscar o peso
+         * cadastrado no PerfilActivity/Firebase.
+         */
         val pesoKg = 70.0
 
         val calorias =
@@ -720,31 +721,19 @@ class MainActivity : ComponentActivity() {
                 .key
                 ?: return
 
-        val dataHora =
+        val data =
             SimpleDateFormat(
                 "dd/MM/yyyy HH:mm",
                 Locale.getDefault()
             ).format(Date())
 
-        // -----------------------------------------------------
-        // CRIAR OBJETO CORRIDA
-        // -----------------------------------------------------
-
         val corrida =
             Corrida(
-                distanciaKm = distanciaKm,
-                dataHora = dataHora,
-                id = id,
-                tempoSegundos = tempoSegundos,
-                ritmoMedio = ritmoMedio,
-                velocidadeMedia = velocidadeMedia,
-                calorias = calorias,
-                data = System.currentTimeMillis()
+                distanciaKm,
+                tempoSegundos,
+                formatarRitmo(ritmoMedio),
+                data
             )
-
-        // -----------------------------------------------------
-        // SALVAR
-        // -----------------------------------------------------
 
         referencia
             .child(id)
@@ -766,7 +755,6 @@ class MainActivity : ComponentActivity() {
                 ).show()
             }
     }
-
 
     // =========================================================
     // VERIFICAR PERMISSÃO
