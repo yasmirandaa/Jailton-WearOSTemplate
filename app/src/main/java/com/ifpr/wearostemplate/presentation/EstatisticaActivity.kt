@@ -12,21 +12,51 @@ import java.util.Locale
 class EstatisticaActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
-        setTheme(android.R.style.Theme_DeviceDefault)
+        setTheme(
+            android.R.style.Theme_DeviceDefault
+        )
 
-        setContentView(R.layout.activity_estatistica)
-        val txtData = findViewById<TextView>(R.id.txtData)
-        val txtHora = findViewById<TextView>(R.id.txtHora)
+        setContentView(
+            R.layout.activity_estatistica
+        )
 
-        val dataFormat = SimpleDateFormat("MMM dd", Locale("pt", "BR"))
-        val horaFormat = SimpleDateFormat("HH:mm", Locale("pt", "BR"))
+        val txtData =
+            findViewById<TextView>(
+                R.id.txtData
+            )
 
-        txtData.text = dataFormat.format(Date()).uppercase()
-        txtHora.text = horaFormat.format(Date())
+        val txtHora =
+            findViewById<TextView>(
+                R.id.txtHora
+            )
 
-        val btnVoltar = findViewById<Button>(R.id.btnVoltar)
+        val dataFormat =
+            SimpleDateFormat(
+                "MMM dd",
+                Locale("pt", "BR")
+            )
+
+        val horaFormat =
+            SimpleDateFormat(
+                "HH:mm",
+                Locale("pt", "BR")
+            )
+
+        txtData.text =
+            dataFormat
+                .format(Date())
+                .uppercase()
+
+        txtHora.text =
+            horaFormat.format(Date())
+
+        val btnVoltar =
+            findViewById<Button>(
+                R.id.btnVoltar
+            )
 
         btnVoltar.setOnClickListener {
             finish()
